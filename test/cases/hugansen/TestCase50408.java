@@ -14,7 +14,7 @@ import java.io.File;
  * Author:  Novemser
  * 2017/5/26
  */
-public class TestCases extends TomcatBaseTest {
+public class TestCase50408 extends TomcatBaseTest {
     @Test
     public void testBug50408() throws Exception {
 //        getTomcatInstanceTestWebapp(true, true);
