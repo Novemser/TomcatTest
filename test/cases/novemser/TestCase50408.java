@@ -1,4 +1,4 @@
-package cases.hugansen;
+package cases.novemser;
 
 import org.apache.catalina.Context;
 import org.apache.catalina.startup.Tomcat;
@@ -21,7 +21,7 @@ import java.util.concurrent.CountDownLatch;
 
 /**
  * Project: apache-tomcat-7.0.0-src
- * Package: cases.hugansen
+ * Package: cases.novemser
  * Author:  Novemser
  * 2017/5/26
  */

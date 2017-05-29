@@ -17,43 +17,31 @@
 
 package org.apache.el.parser;
 
-import junit.framework.TestCase;
 import org.apache.jasper.el.ELContextImpl;
 import org.junit.Test;
 
 import javax.el.ELContext;
-import javax.el.ELException;
 import javax.el.ExpressionFactory;
 import javax.el.ValueExpression;
 
-public class TestELParser extends TestCase {
+import static org.junit.Assert.assertEquals;
 
+public class TestELParser {
     @Test
-    public void testJavaKeyWordSuffix() {
-        ExpressionFactory factory = ExpressionFactory.newInstance();
-        ELContext context = new ELContextImpl();
-
-        TesterBeanA beanA = new TesterBeanA();
-        beanA.setInt("five");
-        ValueExpression var =
-                factory.createValueExpression(beanA, TesterBeanA.class);
-        context.getVariableMapper().setVariable("beanA", var);
-
-        // Should fail
-        Exception e = null;
-        try {
-            ValueExpression ve = factory.createValueExpression(context, "${beanA.int}",
-                    String.class);
-        } catch (ELException ele) {
-            e = ele;
-        }
-        assertNotNull(e);
+    public void testExp() {
+        testExpression("${false || true}", "t");
     }
 
+    @Test
+    public void fuck() throws Exception {
+
+    }
+
+    @Test
     public void testBug49081() {
         // OP's report
         testExpression("#${1+1}", "#2");
-        
+
         // Variations on a theme
         testExpression("#", "#");
         testExpression("##", "##");
@@ -76,12 +64,12 @@ public class TestELParser extends TestCase {
         testExpression("#$#{1+1}", "#$2");
         testExpression("$#{1+1}", "$2");
         testExpression("$#${1+1}", "$#2");
-}
+    }
 
     private void testExpression(String expression, String expected) {
         ExpressionFactory factory = ExpressionFactory.newInstance();
         ELContext context = new ELContextImpl();
-        
+
         ValueExpression ve = factory.createValueExpression(
                 context, expression, String.class);
 
