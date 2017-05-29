@@ -17,20 +17,19 @@
 
 package org.apache.el;
 
-import java.io.File;
-import java.lang.reflect.Method;
-import java.util.Date;
-
-import javax.el.ELException;
-import javax.el.ValueExpression;
-import javax.el.FunctionMapper;
-
-import org.apache.el.ExpressionFactoryImpl;
+import junit.framework.TestCase;
 import org.apache.el.lang.ELSupport;
 import org.apache.jasper.compiler.TestAttributeParser;
 import org.apache.jasper.el.ELContextImpl;
+import org.junit.Assert;
+import org.junit.Test;
 
-import junit.framework.TestCase;
+import javax.el.ELException;
+import javax.el.FunctionMapper;
+import javax.el.ValueExpression;
+import java.io.File;
+import java.lang.reflect.Method;
+import java.util.Date;
 
 /**
  * Tests the EL engine directly. Similar tests may be found in
@@ -149,6 +148,11 @@ public class TestELEvaluation extends TestCase {
         assertEquals("\"\\", evaluateExpression("${\"\\\"\\\\\"}"));
     }
 
+    @Test
+    public void testMultipleEscaping() throws Exception {
+        assertEquals("''", evaluateExpression("${\"\'\'\"}"));
+    }
+
     private void compareBoth(String msg, int expected, Object o1, Object o2){
         int i1 = ELSupport.compare(o1, o2);
         int i2 = ELSupport.compare(o2, o1);
@@ -185,11 +189,61 @@ public class TestELEvaluation extends TestCase {
         assertNotNull(e);
     }
 
+    @Test
+    public void testEscape01() {
+        Assert.assertEquals("$${", evaluateExpression("$\\${"));
+    }
+
+    @Test
+    public void testBug49081a() {
+        Assert.assertEquals("$2", evaluateExpression("$${1+1}"));
+    }
+
+    @Test
+    public void testBug49081b() {
+        Assert.assertEquals("#2", evaluateExpression("##{1+1}"));
+    }
+
+    @Test
+    public void testBug49081c() {
+        Assert.assertEquals("#2", evaluateExpression("#${1+1}"));
+    }
+
+    @Test
+    public void testBug49081d() {
+        Assert.assertEquals("$2", evaluateExpression("$#{1+1}"));
+    }
+
+    @Test
+    public void testBug60431a() {
+        Assert.assertEquals("OK", evaluateExpression("${fn:concat('O','K')}"));
+    }
+
+    @Test
+    public void testBug60431b() {
+        Assert.assertEquals("OK", evaluateExpression("${fn:concat(fn:toArray('O','K'))}"));
+    }
+
+    @Test
+    public void testBug60431c() {
+        Assert.assertEquals("", evaluateExpression("${fn:concat()}"));
+    }
+
+    @Test
+    public void testBug60431d() {
+        Assert.assertEquals("OK", evaluateExpression("${fn:concat2('OK')}"));
+    }
+
+    @Test
+    public void testBug60431e() {
+        Assert.assertEquals("RUOK", evaluateExpression("${fn:concat2('RU', fn:toArray('O','K'))}"));
+    }
 
 
     // ************************************************************************
 
     private String evaluateExpression(String expression) {
+
         ELContextImpl ctx = new ELContextImpl();
         ctx.setFunctionMapper(new FMapper());
         ExpressionFactoryImpl exprFactory = new ExpressionFactoryImpl();
@@ -211,7 +265,37 @@ public class TestELEvaluation extends TestCase {
                     // Ignore
                 } catch (NoSuchMethodException e) {
                     // Ignore
-                } 
+                }
+            } else if ("concat".equals(localName)) {
+                Method m;
+                try {
+                    m = TesterFunctions.class.getMethod("concat", String[].class);
+                    return m;
+                } catch (SecurityException e) {
+                    // Ignore
+                } catch (NoSuchMethodException e) {
+                    // Ignore
+                }
+            } else if ("concat2".equals(localName)) {
+                Method m;
+                try {
+                    m = TesterFunctions.class.getMethod("concat2", String.class, String[].class);
+                    return m;
+                } catch (SecurityException e) {
+                    // Ignore
+                } catch (NoSuchMethodException e) {
+                    // Ignore
+                }
+            } else if ("toArray".equals(localName)) {
+                Method m;
+                try {
+                    m = TesterFunctions.class.getMethod("toArray", String.class, String.class);
+                    return m;
+                } catch (SecurityException e) {
+                    // Ignore
+                } catch (NoSuchMethodException e) {
+                    // Ignore
+                }
             }
             return null;
         }

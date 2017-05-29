@@ -21,4 +21,29 @@ public class TesterFunctions {
     public static String trim(String input) {
         return input.trim();
     }
+
+    public static String concat(String... inputs) {
+        if (inputs == null || inputs.length == 0) {
+            return null;
+        }
+        StringBuilder result = new StringBuilder();
+        for (String input : inputs) {
+            result.append(input);
+        }
+        return result.toString();
+    }
+
+    public static String concat2(String prefix, String... inputs) {
+        StringBuilder result = new StringBuilder(prefix);
+        for (String input : inputs) {
+            result.append(input);
+        }
+        return result.toString();
+    }
+
+    public static String[] toArray(String a, String b) {
+        return new String[] { a, b };
+    }
+
+
 }

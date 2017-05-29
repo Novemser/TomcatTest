@@ -16,12 +16,11 @@
  */
 package org.apache.el.lang;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
+import junit.framework.TestCase;
 
 import javax.el.ELException;
-
-import junit.framework.TestCase;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 
 public class TestELSupport extends TestCase {
     public void testBigDecimal() {

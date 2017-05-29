@@ -17,15 +17,38 @@
 
 package org.apache.el.parser;
 
+import junit.framework.TestCase;
+import org.apache.jasper.el.ELContextImpl;
+import org.junit.Test;
+
 import javax.el.ELContext;
+import javax.el.ELException;
 import javax.el.ExpressionFactory;
 import javax.el.ValueExpression;
 
-import org.apache.jasper.el.ELContextImpl;
-
-import junit.framework.TestCase;
-
 public class TestELParser extends TestCase {
+
+    @Test
+    public void testJavaKeyWordSuffix() {
+        ExpressionFactory factory = ExpressionFactory.newInstance();
+        ELContext context = new ELContextImpl();
+
+        TesterBeanA beanA = new TesterBeanA();
+        beanA.setInt("five");
+        ValueExpression var =
+                factory.createValueExpression(beanA, TesterBeanA.class);
+        context.getVariableMapper().setVariable("beanA", var);
+
+        // Should fail
+        Exception e = null;
+        try {
+            ValueExpression ve = factory.createValueExpression(context, "${beanA.int}",
+                    String.class);
+        } catch (ELException ele) {
+            e = ele;
+        }
+        assertNotNull(e);
+    }
 
     public void testBug49081() {
         // OP's report
