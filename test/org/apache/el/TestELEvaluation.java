@@ -256,47 +256,6 @@ public class TestELEvaluation extends TestCase {
 
         @Override
         public Method resolveFunction(String prefix, String localName) {
-            if ("trim".equals(localName)) {
-                Method m;
-                try {
-                    m = TesterFunctions.class.getMethod("trim", String.class);
-                    return m;
-                } catch (SecurityException e) {
-                    // Ignore
-                } catch (NoSuchMethodException e) {
-                    // Ignore
-                }
-            } else if ("concat".equals(localName)) {
-                Method m;
-                try {
-                    m = TesterFunctions.class.getMethod("concat", String[].class);
-                    return m;
-                } catch (SecurityException e) {
-                    // Ignore
-                } catch (NoSuchMethodException e) {
-                    // Ignore
-                }
-            } else if ("concat2".equals(localName)) {
-                Method m;
-                try {
-                    m = TesterFunctions.class.getMethod("concat2", String.class, String[].class);
-                    return m;
-                } catch (SecurityException e) {
-                    // Ignore
-                } catch (NoSuchMethodException e) {
-                    // Ignore
-                }
-            } else if ("toArray".equals(localName)) {
-                Method m;
-                try {
-                    m = TesterFunctions.class.getMethod("toArray", String.class, String.class);
-                    return m;
-                } catch (SecurityException e) {
-                    // Ignore
-                } catch (NoSuchMethodException e) {
-                    // Ignore
-                }
-            }
             return null;
         }
     }

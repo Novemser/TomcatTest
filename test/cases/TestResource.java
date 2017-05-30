@@ -21,6 +21,30 @@ public class TestResource {
     /**
      * 表达式测试
      *
+     * @param instance 对象
+     * @param expected 预期的值
+     */
+    public static void testExpression(String passTestCase, Object instance, String expected) {
+        ExpressionFactory factory = ExpressionFactory.newInstance();
+        ELContext context = new ELContextImpl();
+        try {
+            ValueExpression ve = factory.createValueExpression(instance, String.class);
+
+            String result = (String) ve.getValue(context);
+
+            assertEquals(expected, result);
+        } catch (Throwable e) {
+            logger.error("Exception caught in EL expression test:", e);
+            return;
+        }
+
+
+        logger.info(passTestCase + " passed.");
+    }
+
+    /**
+     * 表达式测试
+     *
      * @param expression 表达式
      * @param expected   预期的值
      */
@@ -36,8 +60,8 @@ public class TestResource {
 
             assertEquals(expected, result);
         } catch (Throwable e) {
-            logger.error("Exception caught in EL expression test:", e);
-            return;
+            logger.error("Exception caught in test " + passTestCase + ":", e);
+            throw e;
         }
 
 
