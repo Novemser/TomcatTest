@@ -9,7 +9,7 @@ import org.junit.Test;
  * Author:  Novemser
  * 2017/5/29
  */
-public class TestDN210001 {
+public class TestDN210001_0009 {
     @Test
     public void test0001() {
         TestResource.testExpression("DN-21-0001",
