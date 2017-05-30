@@ -62,6 +62,7 @@ public class TestDN210001 {
         TestResource.testExpression("DN-21-0008",
                 "${(1*0*2+2*2)%3}", "1");
     }
+
     @Test
     public void test0009() throws Exception {
         TestResource.testExpression("DN-21-0009",
