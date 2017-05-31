@@ -25,10 +25,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import javax.el.ELException;
-import javax.el.FunctionMapper;
 import javax.el.ValueExpression;
 import java.io.File;
-import java.lang.reflect.Method;
 import java.util.Date;
 
 /**
@@ -245,18 +243,11 @@ public class TestELEvaluation extends TestCase {
     private String evaluateExpression(String expression) {
 
         ELContextImpl ctx = new ELContextImpl();
-        ctx.setFunctionMapper(new FMapper());
+        ctx.setFunctionMapper(new TesterFunctions.FMapper());
         ExpressionFactoryImpl exprFactory = new ExpressionFactoryImpl();
         ValueExpression ve = exprFactory.createValueExpression(ctx, expression,
                 String.class);
         return (String) ve.getValue(ctx);
     }
-    
-    public static class FMapper extends FunctionMapper {
 
-        @Override
-        public Method resolveFunction(String prefix, String localName) {
-            return null;
-        }
-    }
 }

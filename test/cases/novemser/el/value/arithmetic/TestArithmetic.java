@@ -4,10 +4,12 @@ import cases.TestResource;
 import org.apache.el.lang.ELArithmetic;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import static cases.TestResource.logger;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * Project: apache-tomcat-7.0.0-src
@@ -89,10 +91,53 @@ public class TestArithmetic {
     @Test
     public void test0011() throws Exception {
         // a b 先后顺序对结果并无影响
-        testBigDecimalAdd("DN-21-0075", "1000000000000000000001.1", a, b);
-        testBigDecimalAdd("DN-21-0076", "-999999999999999999998.9", a, b.negate());
-        testBigDecimalMultiply("DN-21-0077", "1100000000000000000000.0", a, b);
-        testBigDecimalDivide("DN-21-0078", "100000000000000000000", b, "10");
+        testArithmeticAdd("DN-21-0075", "1000000000000000000001.1", a, b);
+        testArithmeticAdd("DN-21-0076", "-999999999999999999998.9", a, b.negate());
+        testArithmeticMultiply("DN-21-0077", "1100000000000000000000.0", a, b);
+        testArithmeticDivide("DN-21-0078", "100000000000000000000", b, "10");
+
+        int a = 101;
+        int b = 202;
+        testArithmeticAdd("DN-21-0096", "303", a, b);
+        BigInteger bi = new BigInteger("123456789876543210");
+        testArithmeticAdd("DN-21-0097", "123456789876543211", bi, 1);
+        BigDecimal bd = new BigDecimal("0.1234567898765432112345678987654321");
+        testArithmeticAdd("DN-21-0098", "1.1234567898765432112345678987654321", bd, 1);
+        testArithmeticAdd("DN-21-0099", "123456789876543210.1234567898765432112345678987654321", bd, bi);
+        testArithmeticAdd("DN-21-0100", "1", null, 1);
+        testArithmeticAdd("DN-21-0200", "1", "0", 1);
+
+    }
+
+    @Test
+    public void testDivideWhiteBox() {
+        BigDecimal bd = new BigDecimal("123.321");
+        BigInteger bi = new BigInteger("12321");
+        testArithmeticDivide("DN-21-0202", "0", null, null);
+        testArithmeticDivide("DN-21-0203", "0", null, bd);
+        testArithmeticDivide("DN-21-0204", "0", null, bi);
+
+        try {
+            ELArithmetic.divide(bd, null);
+            logger.error("Test case didn't throw exception in DN-21-0205");
+            fail();
+        } catch (Exception e) {
+            logger.info("DN-21-0205 passed.");
+        }
+
+        try {
+            ELArithmetic.divide(bi, null);
+            logger.error("Test case didn't throw exception in DN-21-0206");
+            fail();
+        } catch (Exception e) {
+            logger.info("DN-21-0206 passed.");
+        }
+        bi = new BigInteger("5");
+        bd = new BigDecimal("2.5");
+        testArithmeticDivide("DN-21-0207", "2", 10L, bi);
+        testArithmeticDivide("DN-21-0208", "4", 10L, bd);
+        testArithmeticDivide("DN-21-0209", "0.0", null, 1.1);
+        testArithmeticDivide("DN-21-0210", "1.0", 10L, 10);
     }
 
     @Test
@@ -101,7 +146,7 @@ public class TestArithmetic {
                 String.valueOf(ELArithmetic.subtract(a, b)));
     }
 
-    public void testBigDecimalDivide(String passTestCase, String result, Object left, Object right) {
+    public void testArithmeticDivide(String passTestCase, String result, Object left, Object right) {
         try {
             assertEquals(result, String.valueOf(ELArithmetic.divide(left, right)));
         } catch (Throwable e) {
@@ -111,7 +156,7 @@ public class TestArithmetic {
         logger.info(passTestCase + " passed.");
     }
 
-    public void testBigDecimalMultiply(String passTestCase, String result, Object left, Object right) {
+    public void testArithmeticMultiply(String passTestCase, String result, Object left, Object right) {
         try {
             assertEquals(result, String.valueOf(ELArithmetic.multiply(left, right)));
         } catch (Throwable e) {
@@ -121,7 +166,7 @@ public class TestArithmetic {
         logger.info(passTestCase + " passed.");
     }
 
-    public void testBigDecimalAdd(String passTestCase, String result, Object left, Object right) {
+    public void testArithmeticAdd(String passTestCase, String result, Object left, Object right) {
         try {
             assertEquals(result, String.valueOf(ELArithmetic.add(left, right)));
         } catch (Throwable e) {

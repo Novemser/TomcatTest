@@ -7,12 +7,13 @@ package cases.novemser.el.method;
  * 2017/5/30
  */
 public class TestFunctions {
-    public static String trim(String input) {
-        return input.trim();
+
+    public static String getGreeting() {
+        return "Hello";
     }
 
-    public static String getGreeting(String greeting) {
-        return greeting;
+    public static String trim(String input) {
+        return input.trim();
     }
 
     public static String concat(String... inputs) {
