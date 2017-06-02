@@ -1,4 +1,4 @@
-package cases.novemser.el.value.relational;
+package cases.novemser.el.value.logical;
 
 import cases.TestResource;
 import org.junit.Test;
